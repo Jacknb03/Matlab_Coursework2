@@ -58,11 +58,10 @@ xlabel('Time (s)');
 ylabel('Temperature (^\circC)');
 title('Capsule Temperature over 10 Minutes');
 
-% 获取当前日期，按照 5/3/2024 的格式 (日/月/年)
+% get current date
 date_str = datestr(now, 'dd/mm/yyyy'); 
 
-% 开始拼接字符串 (使用 sprintf)
-% 提示：使用 \n 换行， \t 制造 Tab 间距对齐
+% adjusting character formatting
 log_text = sprintf('Data logging initiated - %s\n', date_str);
 log_text = sprintf('%sLocation - Nottingham\n\n', log_text); % 追加字符
 

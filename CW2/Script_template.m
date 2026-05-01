@@ -29,8 +29,9 @@ time_array = zeros(1, num_samples);
 temp_array = zeros(1, num_samples); 
 
 %choose analog pin'A0‘
-sensor_pin = 'A0';
+sensor_pin = 'A0'; 
 
+disp('start recording temperature')
 
 % collect data
 for i = 1:num_samples
@@ -45,8 +46,50 @@ for i = 1:num_samples
     pause(1); % pause 1s 
 end
 
+% max,min&average temperature 
+max_temp = max(temp_array);
+min_temp = min(temp_array);
+avg_temp = mean(temp_array);
 
-disp('开始采集温度数据，请不要拔掉线缆...');
+%2.Plot
+figure; %create a new window
+plot(time_array, temp_array);
+xlabel('Time (s)');
+ylabel('Temperature (^\circC)');
+title('Capsule Temperature over 10 Minutes');
+
+% 获取当前日期，按照 5/3/2024 的格式 (日/月/年)
+date_str = datestr(now, 'dd/mm/yyyy'); 
+
+% 开始拼接字符串 (使用 sprintf)
+% 提示：使用 \n 换行， \t 制造 Tab 间距对齐
+log_text = sprintf('Data logging initiated - %s\n', date_str);
+log_text = sprintf('%sLocation - Nottingham\n\n', log_text); % 追加字符
+
+% read all data
+for min_idx = 0:10
+
+    % transfer time unit to index numbers
+    array_idx = (min_idx * 60) + 1; 
+    
+    % minute and temperature
+    log_text = sprintf('%sMinute\t\t%d\n', log_text, min_idx);
+    log_text = sprintf('%sTemperature\t%.2f C\n\n', log_text, temp_array(array_idx));
+end
+
+% max,min & average temperature
+log_text = sprintf('%sMax temp\t%.2f C\n', log_text, max_temp);
+log_text = sprintf('%sMin temp\t%.2f C\n', log_text, min_temp);
+log_text = sprintf('%sAverage temp\t%.2f C\n\n', log_text, avg_temp);
+log_text = sprintf('%sData logging terminated\n', log_text);
+
+% display to the screen
+disp(log_text);
+
+% write to files
+fileID = fopen('capsule_temperature.txt', 'w'); 
+fprintf(fileID, '%s', log_text);
+fclose(fileID); 
 
 %% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
 

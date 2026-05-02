@@ -16,13 +16,13 @@ function temp_monitor(a)
 
     
     % time record
-    tStart = tic; % 记录起点时间
-    last_read_time = -1; % 上一次读取温度的时间
-    current_temp = 20;   % 给个初始默认温度
+    tStart = tic; % record start time
+    last_read_time = -1; % last temperature-reading time 
+    current_temp = 20;   % initialize temperature
     
-    % 3. 开始无限循环
+    % infinite loop
     while true
-        tCurrent = toc(tStart); % 获取从启动到现在经过了多少秒
+        tCurrent = toc(tStart); % get the duration from starting time
         
 
         if tCurrent - last_read_time >= 1.0
@@ -42,25 +42,26 @@ function temp_monitor(a)
             title(sprintf('Live Temp: %.2f ^\\circC', current_temp));
             grid on;
             
-            % 让 X 轴动态延伸 (最少显示10秒，多了就跟着时间走)
+            % extend x axis
             xlim([0, max(10, tCurrent)]); 
             drawnow; % update the graph
             
-            last_read_time = floor(tCurrent); % 更新上一次读取的时间
+            last_read_time = floor(tCurrent); % update last temperature reading time
         end
         
 
         if current_temp >= 18 && current_temp <= 24
-            % 正常范围：绿灯常亮，其他全灭
+            % open green_light and close others
             writeDigitalPin(a, 'D2', 1);
             writeDigitalPin(a, 'D3', 0);
             writeDigitalPin(a, 'D4', 0);
             
         elseif current_temp < 18
-            % 偏冷：关绿红，黄灯以0.5秒间隔闪烁 (周期为1秒)
+            % cold, shinning yellow light, close others
             writeDigitalPin(a, 'D2', 0);
             writeDigitalPin(a, 'D4', 0);
-            % 神奇的求余法：每1秒的前0.5秒亮，后0.5秒灭
+
+            %Utilize the remainder method
             if mod(tCurrent, 1.0) < 0.5 
                 writeDigitalPin(a, 'D3', 1);
             else
@@ -68,10 +69,11 @@ function temp_monitor(a)
             end
             
         elseif current_temp > 24
-            % 偏热：关绿黄，红灯以0.25秒间隔闪烁 (周期为0.5秒)
+            %hot, shinning red light, close others
             writeDigitalPin(a, 'D2', 0);
             writeDigitalPin(a, 'D3', 0);
-            % 每0.5秒的前0.25秒亮，后0.25秒灭
+            
+            % remainder method
             if mod(tCurrent, 0.5) < 0.25 
                 writeDigitalPin(a, 'D4', 1);
             else
@@ -79,7 +81,7 @@ function temp_monitor(a)
             end
         end
         
-        % 极短暂的暂停，让 MATLAB 喘口气，防止电脑死机
+        % very short pause, let time step=0.01
         pause(0.01); 
     end
 end

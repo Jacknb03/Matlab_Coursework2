@@ -9,25 +9,25 @@ function temp_monitor(a)
 %   - Red (D4): Blinks at 0.25s intervals if Temp > 24 C.
 %   Press Ctrl+C in Command Window to stop execution.
 
-    % 1. initialize
+    % Initialize figure and arrays
     figure('Name', 'Live Temperature Monitor');
     time_data = [];
     temp_data = [];
 
-    
-    % time record
-    tStart = tic; % record start time
+    disp('Live monitor started...')
+    % start timer
+    tStart = tic;   % record start time
     last_read_time = -1; % last temperature-reading time 
     current_temp = 20;   % initialize temperature
     
-    % infinite loop
+    % enter infinite loop
     while true
-        tCurrent = toc(tStart); % get the duration from starting time
-        
+        tCurrent = toc(tStart); % get the run time
 
+        %Read Temp and Update Plot
         if tCurrent - last_read_time >= 1.0
 
-            % transform voltage into temperature
+            % Read voltage and calculate temperature
             v = readVoltage(a, 'A0');
             current_temp = (v - 0.5) / 0.01;
             
@@ -42,22 +42,22 @@ function temp_monitor(a)
             title(sprintf('Live Temp: %.2f ^\\circC', current_temp));
             grid on;
             
-            % extend x axis
+            %Dynamically extend x axis
             xlim([0, max(10, tCurrent)]); 
-            drawnow; % update the graph
+            drawnow; % update the figure
             
             last_read_time = floor(tCurrent); % update last temperature reading time
         end
         
-
+        % LED Control
         if current_temp >= 18 && current_temp <= 24
-            % open green_light and close others
+            % Comfort zone:open green_light and close others
             writeDigitalPin(a, 'D2', 1);
             writeDigitalPin(a, 'D3', 0);
             writeDigitalPin(a, 'D4', 0);
             
         elseif current_temp < 18
-            % cold, shinning yellow light, close others
+            % cold:shinning yellow light, close others
             writeDigitalPin(a, 'D2', 0);
             writeDigitalPin(a, 'D4', 0);
 
@@ -69,7 +69,7 @@ function temp_monitor(a)
             end
             
         elseif current_temp > 24
-            %hot, shinning red light, close others
+            %hot:shinning red light, close others
             writeDigitalPin(a, 'D2', 0);
             writeDigitalPin(a, 'D3', 0);
             

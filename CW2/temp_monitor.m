@@ -7,7 +7,7 @@ function temp_monitor(a)
 %   - Green (D2): Constant light if in range.
 %   - Yellow (D3): Blinks at 0.5s intervals if Temp < 18 C.
 %   - Red (D4): Blinks at 0.25s intervals if Temp > 24 C.
-%   Press Ctrl+C in Command Window to stop execution.
+
 
     % Initialize figure and arrays
     figure('Name', 'Live Temperature Monitor');

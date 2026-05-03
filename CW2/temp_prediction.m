@@ -8,7 +8,7 @@ function temp_prediction(a)
 %   - Red: Temperature increasing faster than +4 C/min.
 %   - Yellow: Temperature decreasing faster than -4 C/min.
 %   - Green: Temperature is stable.
-%   Press Ctrl+C to terminate.
+
 
     disp('The prediction has been launched! please wait for 10s...');
 

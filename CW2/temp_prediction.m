@@ -1,12 +1,13 @@
 function temp_prediction(a)
-% TEMP_PREDICTION Live temperature prediction and rate warning.
+% TEMP_PREDICTION: Live temperature prediction and rate warning system.
+%   temp_monitor(a) takes an active Arduino object 'a' as input.
 %   This function continuously monitors temperature and uses a 10-second
-%   sliding window algorithm to filter out noise and calculate the true 
-%   rate of temperature change (derivative).
-%   It predicts the temperature 5 minutes (300s) into the future.
+%   sliding window to filter out noise and calculate the
+%   rate of temperature change.
+%   It predicts the temperature 5 minutes into the future.
 %   LED indicators (Constant):
-%   - Red: Temperature increasing faster than +4 C/min.
-%   - Yellow: Temperature decreasing faster than -4 C/min.
+%   - Red: Temperature increasing faster than +4C/min.
+%   - Yellow: Temperature decreasing faster than -4C/min.
 %   - Green: Temperature is stable.
 
 
@@ -16,7 +17,7 @@ function temp_prediction(a)
     buffer_size = 10; 
     temp_buffer = []; 
 
-    % Convert threshold: 4 C/min is equivalent to 0.0667 C/s
+    % 4C/min is equivalent to 0.0667C/s
     threshold_rate_sec = 4.0 / 60.0; 
 
     tStart = tic;
@@ -52,7 +53,7 @@ function temp_prediction(a)
                 fprintf('Current: %.2f C | Rate: %+.2f C/min | Predicted in 5m: %.2f C\n', ...
                         current_temp, rate_per_min, predicted_temp);
 
-                % 4. Control LEDs based on the calculated rate of change
+                % Control LEDs based on the calculated rate of change
                 if rate_per_min > 4.0
                     % Heating up rapidly: Constant Red
                     writeDigitalPin(a, 'D2', 0);
@@ -70,7 +71,8 @@ function temp_prediction(a)
                     writeDigitalPin(a, 'D4', 0);
                 end
             end
-
+            
+            %using floor() to prevent timing drift
             last_read_time = floor(tCurrent);
         end
         %Brief pause

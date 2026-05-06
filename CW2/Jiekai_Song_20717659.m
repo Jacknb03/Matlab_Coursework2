@@ -63,7 +63,7 @@ date_str = datestr(now, 'dd/mm/yyyy');
 
 % adjusting character formatting
 log_text = sprintf('Data logging initiated - %s\n', date_str);
-log_text = sprintf('%sLocation - Nottingham\n\n', log_text); % 追加字符
+log_text = sprintf('%sLocation - Nottingham\n\n', log_text); 
 
 % read all data
 for min_idx = 0:10
@@ -102,7 +102,9 @@ temp_monitor(a);
 
 %% TASK 3 - ALGORITHMS – TEMPERATURE PREDICTION [30 MARKS]
 
+% check instruction
 doc temp_prediction;  
+% using function temp_prediction
 temp_prediction(a);
 
 %% TASK 4 - REFLECTIVE STATEMENT [5 MARKS]

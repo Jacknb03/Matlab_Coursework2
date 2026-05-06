@@ -1,8 +1,8 @@
 function temp_monitor(a)
-% TEMP_MONITOR Live temperature tracking and LED warning system.
+% TEMP_MONITOR: Live temperature tracking and warning system.
 %   temp_monitor(a) takes an active Arduino object 'a' as input.
-%   It indefinitely monitors temperature reading from A0 at 1s intervals
-%   and dynamically updates a live plot.
+%   It monitors temperature reading from A0 at 1s intervals
+%   and updates a live plot.
 %   LEDs blink based on comfort range (18-24 C):
 %   - Green (D2): Constant light if in range.
 %   - Yellow (D3): Blinks at 0.5s intervals if Temp < 18 C.
@@ -46,7 +46,8 @@ function temp_monitor(a)
             xlim([0, max(10, tCurrent)]); 
             drawnow; % update the figure
             
-            last_read_time = floor(tCurrent); % update last temperature reading time
+            % update last temperature reading time, using floor() to prevent timing drift
+            last_read_time = floor(tCurrent); 
         end
         
         % LED Control
